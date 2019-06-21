@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{%block title%}{%endblock%} | Web Personal</title>
+</head>
+<body>
+    <!--Cabecera y menú-->
+    <h1>Mi web - prueba</h1><h2>Portada</h2>
+    <ul>
+        <!--<li><a href="/">Portada</a></li>
+        <li><a href="/aboutme">Acerca de</a></li>
+        <li><a href="/portfolio">Portafolio</a></li>
+        <li><a href="/contacto">Contacto</a></li>-->
+        <li><a href="{%url 'home'%}">Portada</a></li><!--Tag url me redirige a la vista dinamicamente y pongo el nombre del valor name en el path-->
+        <li><a href="{%url 'about'%}">Acerca de</a></li>
+        <li><a href="{%url 'portf'%}">Portafolio</a></li>
+        <li><a href="{%url 'contacto'%}">Contacto</a></li>
+    </ul>   
+    <!--Contenido--Herencia-->
+    <!--Etiqueta de template, sirve para añadir logica en html-->
+    {%block content%}{%endblock%}<!--Define un bloque de contenido con un nombre-->     
+    {%block about%}{%endblock%}
+    {%block contact%}{%endblock%}
+    {%block portafolio%}{%endblock%}
+    
+</body>
+</html>

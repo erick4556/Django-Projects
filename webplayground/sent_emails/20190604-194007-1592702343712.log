@@ -1,0 +1,25 @@
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: =?utf-8?q?Contrase=C3=B1a_restablecida_en_localhost=3A8000?=
+From: webmaster@localhost
+To: dev@hotmail.com
+Date: Wed, 05 Jun 2019 00:40:07 -0000
+Message-ID: <155969520722.8104.13587481115950432049@LAPTOP-LEB232V2>
+
+
+Ha recibido este correo electrónico porque ha solicitado restablecer la contraseña para su cuenta en localhost:8000.
+
+Por favor, vaya a la página siguiente y escoja una nueva contraseña.
+
+http://localhost:8000/accounts/reset/MTA/56w-2c4e39bdd58ff70e9c81/
+
+Su nombre de usuario, en caso de haberlo olvidado: dev
+
+¡Gracias por usar nuestro sitio!
+
+El equipo de localhost:8000
+
+
+
+-------------------------------------------------------------------------------

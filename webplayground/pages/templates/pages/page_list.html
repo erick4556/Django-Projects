@@ -1,0 +1,29 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block title %}Páginas{% endblock %}
+{% block content %}
+{%include 'pages/includes/pages_menu.html' %} <!--Para el menu-->
+<main role="main">
+  <div class="container mb-4">
+    {% for page in page_list|dictsort:"id" reversed %} <!--El nombre que le da a la lista de modelo es object_list o el nombre del modelo page : page_list. El dictsort:id ordeno por id y el reversed para que lo ordene al revés-->
+      <div class="row mt-3">
+        <div class="col-md-9 mx-auto">
+          <h2 class="mb-4">{{page.title}}</h2>
+          <div>
+            <p>{{page.content|striptags|safe|truncatechars:"200"}}</p>
+            <!--<p><a href="{% url 'page' page.id page.title|slugify %}">Leer más</a> Cambia la ruta por que se modifico en las rutas generales de pages-->
+            <p><a href="{% url 'page' page.id page.title|slugify %}">Leer más</a>
+              
+              {% if request.user.is_staff %}
+                | <a href="{% url 'update' page.id %}">Editar</a>
+               | <a href="{% url 'delete' page.id %}">Borrar</a>
+              {% endif %}
+              
+            </p>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</main>
+{% endblock %}

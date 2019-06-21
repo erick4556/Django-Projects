@@ -1,0 +1,56 @@
+{% extends 'core/base.html' %}
+
+{% load static %}
+
+{% block title %}Blog{% endblock %}
+
+{% block content %}
+{%for post in posts%}
+<section class="page-section cta">
+  <div class="container">
+    <div class="row">
+      <div class="col-xl-9 mx-auto">
+        <div class="cta-innerv text-center rounded">
+          <h2 class="section-heading mb-5">
+            <span class="section-heading-upper">{{post.published|date:"SHORT_DATE_FORMAT"}}</span> <!--tag para formatear la fecha |date:"SHORT_DATE_FORMAT"-->
+            <span class="section-heading-lower">{{post.title}}}</span>
+          </h2>
+          <p class="mb-0">
+            <img class="mx-auto d-flex rounded img-fluid mb-3 mb-lg-0" src="{{post.image.url}}" alt=""> <!--url para genera el link de la imagen-->
+          </p>
+          <p class="mb-0 mbt">
+            {{post.content|linebreaks}} <!--EL linebreaks es para que muestre los saltos de líneas que esta en la información-->
+          </p>
+          <p class="mb-0 mbt">
+           {% comment %}  <span class="section-heading-under">Publicado por <em><b>{{post.author}}</b></em> en <em>
+            <!--<a href="#" class="link">General</a>, <a href="#" class="link">Ofertas</a></em>-->
+
+            <!--Mostrar las categorias que estan relacionadas con las entradas-->
+            {%for category in post.categories.all%}
+              {{category.name}}{%if not forloop.last%},{%endif%}<!--Si no esta en la ultima iteración, muestro la coma-->
+            {% endfor %}
+            </span> {% endcomment %}
+            
+            <!--Otra forma-->
+
+            <span class="section-heading-under">Publicado por <em><b>{{post.author}}</b></em> en <em>
+              <em>
+              <!--Mostrar las categorias que estan relacionadas con las entradas-->
+                {%for category in post.categories.all%}
+                  <a href="{%url 'category' category.id%}" class="link">{{category.name}}</a>{%if not forloop.last%},{%endif%}<!--Si no esta en la ultima iteración, muestro la coma-->
+                {% endfor %}
+              </em>
+            </span>
+
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+{%endfor%}
+{% endblock %}
+
+
+    
