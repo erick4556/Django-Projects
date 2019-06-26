@@ -73,13 +73,17 @@
                           fetch(url,{'credentials':'include'}).then(response => response.json()).then(function(data){ //{'credentials':'include'} para pasarle las credenciales. Con eso fetch detecta la sesión que hay abierta a nivel de usuario y la incluye en la petición
                            // alert(data.created);//Hago referencia a las claves del objeto
                            // Si el mensaje se ha creado correctamente...
-                           if (data.created) {
+                         if (data.created) {
                               // Aquí iría el código de creación del mensaje dinámicamente
                               var message = document.createElement('div');
                               message.classList.add('mine','mb3'); //A la capa message le añado clases
                               message.innerHTML = '<small><i>Hace unos segundos</i></small><br>'+decodeURIComponent(content);//Introducir el contenido a la capa. decodeURIComponent() para descodificar el mensaje para insertarlo en el html
                               document.getElementById('thread').appendChild(message);//appendChild para añadirle al final un hijo, y ese hijo es la capa message que he creado con javascript
                               ScrollBottom();//Baje el scroll abajo del todo
+                              //Si es el primer mensaje del hilo actualizo para que aparezca a la izquierda - Actualización sincrona
+                              if(data.first){
+                                window.location.href = "{%url 'messenger:detail' thread.pk%}";
+                              }
                             } else {
                               // Si algo ha ido mal podemos debugear en la consola del inspector
                               console.log("Algo ha fallado y el mensaje no se ha podido añadir.");

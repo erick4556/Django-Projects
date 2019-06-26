@@ -30,9 +30,13 @@ class ThreadManager(models.Manager):
 class Thread(models.Model):
     users = models.ManyToManyField(User,related_name='threads') #Uso el related_name para poder acceder desde un user, haciendo user.threads, búsqueda inversa, todo los hilos a los que pertenece
     messages = models.ManyToManyField(Message) #Almacena todos los mensajes que forman parte del hilo
+    updated = models.DateTimeField(auto_now=True) #Para que guarde forma autómatica la fecha y hora de la ultima actualización
 
     #TDD(3)
     objects = ThreadManager() #A mi hilo asigno el objects ThreadManager() para poder crear filtros personalizados
+
+    class Meta:
+        ordering = ['-updated'] #Ordena de forma inversa del campo updated
 
 def messages_changed(sender, **kwargs):
     #Recuperación
@@ -50,7 +54,10 @@ def messages_changed(sender, **kwargs):
                 false_pk_set.add(msg_pk) #Almaceno aqui los mensajes fraudalentos
 
     #Buscar los mensajes de false_pk_set que si están en pk_set y los borro del pk_set
-    pk_set.difference_update(false_pk_set)                 
+    pk_set.difference_update(false_pk_set)  
+
+    #Forzar la actualización haciendo save - Esto es para coloque los mensajes reciente actualizados
+    instance.save()               
 
 m2m_changed.connect(messages_changed, sender=Thread.messages.through) #Me conecto a la señal con cualquier cambio que suceda en el campo messages .messages_changed la señal que quiero conectar.   
 

@@ -6,7 +6,9 @@ from .models import Thread, Message
 from django.http import Http404, JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib.auth.models import User
+from django.urls import reverse_lazy
 
 
 # Create your views here.
@@ -46,6 +48,14 @@ def add_message(request, pk):
             message = Message.objects.create(user=request.user, content=content) #Crea un mensaje con el usuario request.user que esta identificado 
             thread.messages.add(message)#Añadir al hilo el mensaje
             json_response['created'] = True #Cambiar el valor diccionario json a True
+            if len(thread.messages.all()) is 1: #Si la longitud tiene un mensaje y solo 1 en la conversación
+                json_response['first'] = True
     else:
         raise Http404("Usuario no autenticado") #Devuelvo un error    
     return JsonResponse(json_response) #Automaticamente hace la conversión del diccionaro de python a un objeto json   
+
+@login_required #Para ver si el usuario esta identificado. No le agredo el adorno al método por que es una vista comun y corriente
+def start_thread(request,username): #Paso el username con el que quiero empezar a hablar
+    user = get_object_or_404(User,username=username)
+    thread = Thread.objects.find_or_create(user, request.user) #Creo el hilo. Uso el método que buscaría o devuelve el hilo si ya existe, luego creo el hilo con los parametros que le paso
+    return redirect(reverse_lazy('messenger:detail',args=[thread.pk])) #Le envío al hilo los argumentos con args que va una lista y el primero es thread.pk
