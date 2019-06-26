@@ -24,7 +24,7 @@ class StaffRequiredMixin(object): #Heredo object que es la clase base de todas l
     #Este mixin requiere que el usuario sea miembro del staff
 
      #Para seguridad los métodos update, create y delete. Sobreescribo el método dispatch y uso un decorador
-    @method_decorator(staff_member_required) #Le paso al decorador el staff_member_required, y añade el requistio que tiene que ser miembro del staff al método dispatch 
+    @method_decorator(staff_member_required) #Le paso al decorador el staff_member_required, y añade el requisito que tiene que ser miembro del staff al método dispatch 
     def dispatch(self, request, *args, **kwargs):
         #Ojo no hago las desiciones por que el decorador hace eso.
         return super(StaffRequiredMixin, self).dispatch(request, *args, **kwargs)         

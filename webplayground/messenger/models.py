@@ -49,7 +49,7 @@ def messages_changed(sender, **kwargs):
                 print("Ups, ({}) no forma parte del hilo".format(msg.user))
                 false_pk_set.add(msg_pk) #Almaceno aqui los mensajes fraudalentos
 
-    #BUscar los mensajes de false_pk_set que si están en pk_set y los borro del pk_set
+    #Buscar los mensajes de false_pk_set que si están en pk_set y los borro del pk_set
     pk_set.difference_update(false_pk_set)                 
 
 m2m_changed.connect(messages_changed, sender=Thread.messages.through) #Me conecto a la señal con cualquier cambio que suceda en el campo messages .messages_changed la señal que quiero conectar.   

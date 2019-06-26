@@ -1,0 +1,63 @@
+# Consultar la versión de Python por defecto
+python -V
+
+# Crear entorno Conda vacío con Python 3.7
+conda create -n django2 python==3.7 sqlite==3.25.3
+
+# Activar el entorno virtual
+activate django2
+
+# Listar los paquetes instalados en el entorno virtual
+(django2) pip list
+
+# Instalar Django en el entorno virtual
+(django2) pip install django  # se puede instalar cualquier versión con django==2.0.2 o la que sea
+
+# Crear un proyecto de Django
+(django2) django-admin startproject proyecto
+
+# Desinstalar Django del entorno virtual
+(django2) pip uninstall django
+
+# Desactivar el entorno virtual
+(django2) deactivate
+
+#Crear una app 
+py manage.py startapp nombre_app
+
+#Migrar modelo de una app
+py manage.py makemigrations nombre_app o si quieres migrar todo py manage.py 
+
+#Aplicar las migraciones
+py manage.py migrate nombre_app o migrar todo py manage.py migrate
+
+#Ver la versión de django
+(django)python -m django --version
+
+#Instalar comprobador de sintaxis
+(django)conda install pylint
+
+#Instalar editor de texto
+pip install django-ckeditor
+
+#Instalar manejador de imágenes
+pip install Pillow
+
+#Ejecutar el test
+py manage.py test nombre_app
+#Ejecutar el test de una clase de un archivo
+py manage.py test nombre_app.tests.nombre_clase
+#Ejecutar el test de un test de una clase de un archivo
+py manage.py test nombre_app.tests.nombre_clase.nombre_metodo
+
+#Linea de comandos
+#Abrir la shell
+py manage.py shell
+#Recuperar un usuario
+user = User.objects.get(username="user"
+#Crear un hilo con los dos usuarios usando la función que he creado en el hilo
+thread = Thread.objects.find_or_create(dev,test)
+#Agregar un mensaje	
+thread.messages.add(Message.objects.create(user=dev, content="Hola test"))
+thread.messages.add(Message.objects.create(user=test, content="Que tal dev"))
+

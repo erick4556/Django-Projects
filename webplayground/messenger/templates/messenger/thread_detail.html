@@ -1,0 +1,115 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block title %}Hilo{% endblock %}
+{% block content %}
+<style>
+  .avatar  { width:50px; height:50px; float:left; margin-right:10px; }
+  .thread  { max-height:300px; overflow-y:auto; padding:0 0.5em;} 
+  .mine    { padding:0 0.5em 0.25em; background-color:rgba(230,242,245,.5); width:92%; margin-left:8%; }
+  .other   { padding:0 0.5em 0.25em; background-color:#f2f3f5; width:92%; }
+</style>
+<main role="main">
+  <div class="container">
+    <div class="row mt-3">
+      <div class="col-md-9 mx-auto mb-5">
+        <div class="row">
+          <!-- Hilos de conversación -->
+          <div class="col-md-4">
+            <!-- Con una búsqueda inversa user.threads también podemos conseguir los hilos de un usuario -->
+            {% for thread in request.user.threads.all %}
+              <!-- Sólo mostraremos un Thread si tiene como mínimo 1 mensaje -->
+              {% if thread.messages.all|length > 0 %}
+                <div class="mb-3">
+                  <!-- Recorremos los miembros del hilo menos el propio request.user -->
+                  {% for user in thread.users.all %}
+                    {% if user != request.user %}     
+                      <!-- Mostramos el avatar del miembro -->                
+                      {% if user.profile.avatar %}
+                        <img src="{{user.profile.avatar.url}}" class="avatar">
+                      {% else %}
+                        <img src="{% static 'registration/img/no-avatar.jpg' %}" class="avatar">
+                      {% endif %}
+                      <!-- Mostramos la información del miembro --> 
+                      <div>
+                        <a href="{% url 'messenger:detail' thread.pk %}">{{user}}</a><br>
+                        <small><i>Hace {{thread.messages.last.created|timesince}}</i></small>
+                      </div>
+                    {% endif %}
+                  {% endfor %}
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+          <!-- Hilo de conversación -->
+          <div class="col-md-8">
+            <!-- Recorremos los miembros del hilo menos el propio request.user -->
+            {% for user in thread.users.all %}
+              {% if user != request.user %}       
+                <h4 class="mb-4">Mensajes con <a href="{% url 'profiles:detail' user %} ">{{user}}</a></h4>
+              {% endif %}
+            {% endfor %}
+            <!-- Mostramos los mensajes en una capa que tiene un overflow vertical de 300 píxeles -->
+            <div class="thread" id="thread">
+              {% for message in object.messages.all %}
+                <!-- Dependiendo del usuario asignamos una clase con un color de fondo u otro en el mensaje -->
+                <div {% if request.user == message.user %}class="mine mb-3"{% else %}class="other mb-3"{% endif %}>
+                  <small><i>Hace {{thread.messages.last.created|timesince}}</i></small><br>
+                  {{message.content}}
+                </div>
+              {% endfor %}
+            </div>
+            <!-- Aquí crearemos el formulario - xD-->
+                <textarea id="content" class="form-control mb-2" rows="2" placeholder="Escribe tu mensaje picaro" ></textarea>
+                 <button id="send" class="btn btn-primary btn-sm btn-block col-md-12 col-sm-2" disabled>Enviar mensaje</button>
+                <script>
+                  var send = document.getElementById("send");
+                    //Ejecuto un evento de click y que se ejecute una función cuando se de click
+                    send.addEventListener("click",function(){//Capturo una respuesta y la convierto a json, luego paso una función y le paso la data para procesar los datos 
+                      var content = encodeURIComponent(document.getElementById("content").value);//Con el value hago referencia a su valor interno. Con el encode codifico el contenido
+                       if(content.length>0){
+                         document.getElementById("content").value = '';//Para asignarle un valor vacío
+                         send.disabled = true;
+                          const url = "{%url 'messenger:add' thread.pk %}"+"?content="+content;
+                          fetch(url,{'credentials':'include'}).then(response => response.json()).then(function(data){ //{'credentials':'include'} para pasarle las credenciales. Con eso fetch detecta la sesión que hay abierta a nivel de usuario y la incluye en la petición
+                           // alert(data.created);//Hago referencia a las claves del objeto
+                           // Si el mensaje se ha creado correctamente...
+                           if (data.created) {
+                              // Aquí iría el código de creación del mensaje dinámicamente
+                              var message = document.createElement('div');
+                              message.classList.add('mine','mb3'); //A la capa message le añado clases
+                              message.innerHTML = '<small><i>Hace unos segundos</i></small><br>'+decodeURIComponent(content);//Introducir el contenido a la capa. decodeURIComponent() para descodificar el mensaje para insertarlo en el html
+                              document.getElementById('thread').appendChild(message);//appendChild para añadirle al final un hijo, y ese hijo es la capa message que he creado con javascript
+                              ScrollBottom();//Baje el scroll abajo del todo
+                            } else {
+                              // Si algo ha ido mal podemos debugear en la consola del inspector
+                              console.log("Algo ha fallado y el mensaje no se ha podido añadir.");
+                            }
+                          });
+                       }    
+                    });
+
+                    //Evento que activa o desactiva el boton si hay mensaje o no
+                    var content = document.getElementById("content");
+                    content.addEventListener("keyup", function(){//Para saber cuando se esta escribiendo o dejando de escribir
+                      if(!this.checkValidity() || !this.value){ //Para ver si el text area esta vacío o tiene valor interno que no es un caracter o que haiga un valor que no sea nulo
+                          send.disabled = true;
+                      }else{
+                        send.disabled = false;
+                      }
+                    });
+
+                    //Forzar el scroll abajo del todo
+                    function ScrollBottom(){
+                      var thread = document.getElementById('thread');
+                      thread.scrollTop = thread.scrollHeight; //Asigno los pixeles como quiero que aparezca la barra. //thread.scrollHeight la altura que tiene la capa
+                    }
+
+                    ScrollBottom();
+
+                </script>
+          </div>
+        </div>
+    </div>
+  </div>
+</main>
+{% endblock %}
